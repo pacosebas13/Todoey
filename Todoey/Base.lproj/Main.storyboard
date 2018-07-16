@@ -32,7 +32,14 @@
                             <outlet property="delegate" destination="l06-to-yOf" id="0lG-br-zpV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoest" id="hUL-qj-cVH"/>
+                    <navigationItem key="navigationItem" title="Todoest" id="hUL-qj-cVH">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="nlu-wH-iFS">
+                            <color key="tintColor" red="0.05979877284" green="0.48293798570000002" blue="0.22526595629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="l06-to-yOf" id="8wr-UB-iaC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qiK-8D-Od4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -46,10 +53,10 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="d1V-Hi-MKS">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.78333663090000005" green="0.90325835350000006" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.12414280318778871" green="0.91268620466321249" blue="0.49105116334515531" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
-                            <color key="textColor" red="0.39225784289999999" green="0.52365284990000005" blue="0.6066224093" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="textColor" red="0.059798772838274956" green="0.48293798572487046" blue="0.22526595628817356" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
