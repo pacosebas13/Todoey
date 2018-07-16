@@ -10,7 +10,9 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var toDoListItems = ["Find Mike","Buy EGOS","Destroy Demogorgon"]
+    var toDoListItems = [String]()
+    let defaults = UserDefaults.standard
+    
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -18,7 +20,8 @@ class ToDoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             if let checkText = textField.text {
-                self.toDoListItems.append(checkText ?? "Empty Item")
+                self.toDoListItems.append(checkText)
+                self.defaults.set(self.toDoListItems, forKey: "ToDoListArray")
                 self.tableView.reloadData()
                 
             } else {
@@ -36,6 +39,9 @@ class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        if let tempArray = defaults.array(forKey: "ToDoListArray") as? [String] {
+            toDoListItems = tempArray
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
