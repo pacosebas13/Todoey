@@ -45,8 +45,7 @@ class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        //loadItems()
+        loadItems()
         // Do any additional setup after loading the view, typically from a nib.
 //        if let tempArray = defaults.array(forKey: "ToDoListArray") as? [ToDoListItem] {
 //            toDoListItems = tempArray
@@ -69,9 +68,11 @@ class ToDoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(toDoListItems[indexPath.row])
         
         toDoListItems[indexPath.row].done = !toDoListItems[indexPath.row].done
+        
+//        context.delete(toDoListItems[indexPath.row])
+//        toDoListItems.remove(at: indexPath.row)
         
         self.saveDataMethod()
         
@@ -87,14 +88,39 @@ class ToDoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-//    func loadItems() {
-//        do {
-//            let data = try Data(contentsOf: dataFilePath!)
-//            let decoder = PropertyListDecoder()
-//            toDoListItems = try decoder.decode([ToDoListItem].self, from: data)
-//        } catch {
-//
-//        }
-//    }
+    func loadItems(with request: NSFetchRequest<ToDoListItem> = ToDoListItem.fetchRequest()) {
+        
+        do {
+            toDoListItems = try context.fetch(request)
+        } catch {
+            print("Error fetching")
+        }
+        tableView.reloadData()
+    }
+    
 }
 
+//MARK: ~ Search bar methods
+extension ToDoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<ToDoListItem> = ToDoListItem.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "item CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "item", ascending: true)]
+
+        loadItems(with: request)
+
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}

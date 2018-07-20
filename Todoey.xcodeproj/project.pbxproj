@@ -13,6 +13,7 @@
 		9048604420FC1AA0006D1359 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9048604220FC1AA0006D1359 /* Main.storyboard */; };
 		9048604620FC1AA1006D1359 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9048604520FC1AA1006D1359 /* Assets.xcassets */; };
 		9048604920FC1AA1006D1359 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9048604720FC1AA1006D1359 /* LaunchScreen.storyboard */; };
+		90C6345D2101773000BE9E6F /* CategoryViewControllerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C6345C2101773000BE9E6F /* CategoryViewControllerTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		9048604520FC1AA1006D1359 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9048604820FC1AA1006D1359 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9048604A20FC1AA1006D1359 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		90C6345C2101773000BE9E6F /* CategoryViewControllerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewControllerTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 		9004FCA120FEE22F000F9894 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				90C6345C2101773000BE9E6F /* CategoryViewControllerTableViewController.swift */,
 				9048604020FC1AA0006D1359 /* ToDoListViewController.swift */,
 			);
 			path = Controllers;
@@ -172,6 +175,7 @@
 			files = (
 				9048604120FC1AA0006D1359 /* ToDoListViewController.swift in Sources */,
 				9004FCA720FEE2B9000F9894 /* DataModel.xcdatamodeld in Sources */,
+				90C6345D2101773000BE9E6F /* CategoryViewControllerTableViewController.swift in Sources */,
 				9048603F20FC1AA0006D1359 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
