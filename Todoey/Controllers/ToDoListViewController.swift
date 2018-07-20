@@ -12,6 +12,11 @@ import CoreData
 class ToDoListViewController: UITableViewController {
     
     var toDoListItems = [ToDoListItem]()
+    var selectedCategory : Category? {
+        didSet{
+            loadItems()
+        }
+    }
     
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -26,6 +31,7 @@ class ToDoListViewController: UITableViewController {
                 let newItem = ToDoListItem(context: self.context)
                 newItem.item = checkText
                 newItem.done = false
+                newItem.parentCategory = self.selectedCategory
                 self.toDoListItems.append(newItem)
                 self.saveDataMethod()
                 self.tableView.reloadData()
@@ -44,8 +50,7 @@ class ToDoListViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        loadItems()
+    
         // Do any additional setup after loading the view, typically from a nib.
 //        if let tempArray = defaults.array(forKey: "ToDoListArray") as? [ToDoListItem] {
 //            toDoListItems = tempArray
@@ -89,6 +94,14 @@ class ToDoListViewController: UITableViewController {
     }
     
     func loadItems(with request: NSFetchRequest<ToDoListItem> = ToDoListItem.fetchRequest()) {
+        
+        
+        if let commingPredicate = request.predicate {
+            let compountPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [commingPredicate, NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)])
+            request.predicate = compountPredicate
+        } else {
+            request.predicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        }
         
         do {
             toDoListItems = try context.fetch(request)

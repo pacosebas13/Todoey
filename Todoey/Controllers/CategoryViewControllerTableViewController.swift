@@ -71,8 +71,7 @@ class CategoryViewControllerTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: "goToItemList", sender: self)
+        performSegue(withIdentifier: "goToItemView", sender: self)
     }
     
     func saveData () {
@@ -82,6 +81,18 @@ class CategoryViewControllerTableViewController: UITableViewController {
             print("Save data error")
         }
         tableView.reloadData()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! ToDoListViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = userCategories[indexPath.row]
+            print(indexPath.row)
+        } else {
+            print("no va")
+        }
+    
     }
     //MARK: ~ Data Manipulation Methods
     
