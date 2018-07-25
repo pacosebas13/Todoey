@@ -7,12 +7,13 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewControllerTableViewController: UITableViewController {
     
-    var userCategories = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
+    
+    var userCategories: Results<Category>?
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -20,12 +21,11 @@ class CategoryViewControllerTableViewController: UITableViewController {
         
         let alert = UIAlertController(title: "New Category", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            let newItem = Category(context: self.context)
+            let newItem = Category()
             
-            newItem.name = userEnteredText.text
-            self.userCategories.append(newItem)
+            newItem.name = userEnteredText.text!
             
-            self.saveData()
+            self.save(category: newItem)
             
         }
         
@@ -45,27 +45,22 @@ class CategoryViewControllerTableViewController: UITableViewController {
 
     //MARK: ~ TableView Datasource Methods
     func loadItems() {
-        let request : NSFetchRequest<Category> = Category.fetchRequest()
         
-        do {
-            userCategories = try context.fetch(request)
-        } catch {
-            print("Fetch issue")
-        }
+        userCategories = realm.objects(Category.self)
         
         tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userCategories.count
+        return userCategories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let item = userCategories[indexPath.row]
+        let item = userCategories?[indexPath.row]
         
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = item?.name ?? "No cattegories added"
         
         return cell
     }
@@ -74,9 +69,11 @@ class CategoryViewControllerTableViewController: UITableViewController {
         performSegue(withIdentifier: "goToItemView", sender: self)
     }
     
-    func saveData () {
+    func save (category : Category) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Save data error")
         }
@@ -87,7 +84,7 @@ class CategoryViewControllerTableViewController: UITableViewController {
         let destinationVC = segue.destination as! ToDoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = userCategories[indexPath.row]
+            destinationVC.selectedCategory = userCategories?[indexPath.row]
             print(indexPath.row)
         } else {
             print("no va")

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9004FCA720FEE2B9000F9894 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9004FCA520FEE2B9000F9894 /* DataModel.xcdatamodeld */; };
+		902171E0210530DE005EB04B /* ToDoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902171DF210530DE005EB04B /* ToDoListItem.swift */; };
+		902171E2210530EF005EB04B /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902171E1210530EF005EB04B /* Category.swift */; };
 		9048603F20FC1AA0006D1359 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9048603E20FC1AA0006D1359 /* AppDelegate.swift */; };
 		9048604120FC1AA0006D1359 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9048604020FC1AA0006D1359 /* ToDoListViewController.swift */; };
 		9048604420FC1AA0006D1359 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9048604220FC1AA0006D1359 /* Main.storyboard */; };
@@ -20,7 +21,8 @@
 /* Begin PBXFileReference section */
 		394C0AADC7CEB74C7E402A3F /* Pods-Todoey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.debug.xcconfig"; sourceTree = "<group>"; };
 		4DADEE17AE140B85251E0D23 /* Pods-Todoey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.release.xcconfig"; sourceTree = "<group>"; };
-		9004FCA620FEE2B9000F9894 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		902171DF210530DE005EB04B /* ToDoListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListItem.swift; sourceTree = "<group>"; };
+		902171E1210530EF005EB04B /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		9048603B20FC1AA0006D1359 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9048603E20FC1AA0006D1359 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9048604020FC1AA0006D1359 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
@@ -65,7 +67,8 @@
 		9004FCA220FEE256000F9894 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				9004FCA520FEE2B9000F9894 /* DataModel.xcdatamodeld */,
+				902171DF210530DE005EB04B /* ToDoListItem.swift */,
+				902171E1210530EF005EB04B /* Category.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -241,9 +244,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9048604120FC1AA0006D1359 /* ToDoListViewController.swift in Sources */,
-				9004FCA720FEE2B9000F9894 /* DataModel.xcdatamodeld in Sources */,
 				90C6345D2101773000BE9E6F /* CategoryViewControllerTableViewController.swift in Sources */,
+				902171E0210530DE005EB04B /* ToDoListItem.swift in Sources */,
 				9048603F20FC1AA0006D1359 /* AppDelegate.swift in Sources */,
+				902171E2210530EF005EB04B /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,19 +447,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		9004FCA520FEE2B9000F9894 /* DataModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				9004FCA620FEE2B9000F9894 /* DataModel.xcdatamodel */,
-			);
-			currentVersion = 9004FCA620FEE2B9000F9894 /* DataModel.xcdatamodel */;
-			path = DataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 9048603320FC1AA0006D1359 /* Project object */;
 }

@@ -7,19 +7,19 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class ToDoListViewController: UITableViewController {
     
-    var toDoListItems = [ToDoListItem]()
+    let realm = try! Realm()
+    
+    var toDoList: Results<ToDoListItem>?
     var selectedCategory : Category? {
         didSet{
             loadItems()
         }
     }
     
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -28,17 +28,22 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             if let checkText = textField.text {
                 
-                let newItem = ToDoListItem(context: self.context)
-                newItem.item = checkText
-                newItem.done = false
-                newItem.parentCategory = self.selectedCategory
-                self.toDoListItems.append(newItem)
-                self.saveDataMethod()
-                self.tableView.reloadData()
-                
-            } else {
-                print("nothing entered")
+                if let currentCategory = self.selectedCategory {
+                    do {
+                        try self.realm.write {
+                            let newItem = ToDoListItem()
+                            newItem.item = checkText
+                            newItem.dateCreated = Date()
+                            newItem.done = false
+                            currentCategory.items.append(newItem)
+                            self.realm.add(newItem)
+                        }
+                    } catch {
+                        print("error saving data")
+                    }
+                }
             }
+            self.tableView.reloadData()
         }
         alert.addAction(action)
         alert.addTextField { (alertTextField) in
@@ -58,56 +63,46 @@ class ToDoListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return toDoListItems.count
+        return toDoList?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath)
-        let item = toDoListItems[indexPath.row]
+        if let item = toDoList?[indexPath.row] {
+            cell.textLabel?.text = item.item
+            
+            cell.accessoryType = item.done ? .checkmark : .none
+        } else {
+            cell.textLabel?.text = "No items added"
+        }
         
-        cell.textLabel?.text = item.item
         
-        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        toDoListItems[indexPath.row].done = !toDoListItems[indexPath.row].done
-        
-//        context.delete(toDoListItems[indexPath.row])
-//        toDoListItems.remove(at: indexPath.row)
-        
-        self.saveDataMethod()
+        if let item = toDoList?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("Error updating data")
+            }
+        } else {
+            print("Error updating data")
+        }
         
         tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    func saveDataMethod() {
-        do {
-            try context.save()
-        } catch {
-            print("Error saving context \(error)")
-        }
-        tableView.reloadData()
-    }
+   
     
-    func loadItems(with request: NSFetchRequest<ToDoListItem> = ToDoListItem.fetchRequest()) {
+    func loadItems() {
         
-        
-        if let commingPredicate = request.predicate {
-            let compountPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [commingPredicate, NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)])
-            request.predicate = compountPredicate
-        } else {
-            request.predicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        }
-        
-        do {
-            toDoListItems = try context.fetch(request)
-        } catch {
-            print("Error fetching")
-        }
+        toDoList =  selectedCategory?.items.sorted(byKeyPath: "item", ascending: true)
         tableView.reloadData()
     }
     
@@ -115,25 +110,25 @@ class ToDoListViewController: UITableViewController {
 
 //MARK: ~ Search bar methods
 extension ToDoListViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<ToDoListItem> = ToDoListItem.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "item CONTAINS[cd] %@", searchBar.text!)
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "item", ascending: true)]
 
-        loadItems(with: request)
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        //toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "item", ascending: true)
+        toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: false)
+        tableView.reloadData()
 
     }
-    
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()
-            
+
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
+        } else {
+            toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: false)
+            tableView.reloadData()
         }
     }
 }
