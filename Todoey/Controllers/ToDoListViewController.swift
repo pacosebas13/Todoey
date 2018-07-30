@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class ToDoListViewController: UITableViewController {
+class ToDoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
@@ -55,7 +55,7 @@ class ToDoListViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         // Do any additional setup after loading the view, typically from a nib.
 //        if let tempArray = defaults.array(forKey: "ToDoListArray") as? [ToDoListItem] {
 //            toDoListItems = tempArray
@@ -67,7 +67,8 @@ class ToDoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         if let item = toDoList?[indexPath.row] {
             cell.textLabel?.text = item.item
             
@@ -95,16 +96,62 @@ class ToDoListViewController: UITableViewController {
             print("Error updating data")
         }
         
-        tableView.reloadData()
+        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCellAccessoryType.checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
-   
+    
     
     func loadItems() {
         
-        toDoList =  selectedCategory?.items.sorted(byKeyPath: "item", ascending: true)
+        toDoList =  selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
     }
+    
+    override func checkModel(at indexPath: IndexPath) {
+        if let auxToDoList = self.toDoList?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    auxToDoList.done = !auxToDoList.done
+                }
+            } catch {
+                print("issue with deleting")
+            }
+        } else {
+            print("Issue with items")
+        }
+        
+        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCellAccessoryType.checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
+        }
+        
+    }
+    
+    
+    
+    override func deleteModel(at indexPath: IndexPath) {
+        if let auxCategory = self.toDoList?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(auxCategory)
+                }
+            } catch {
+                print("issue with deleting")
+            }
+        } else {
+            print("Issue with categories")
+        }
+    }
+    
+    
+
     
 }
 
@@ -113,8 +160,7 @@ extension ToDoListViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
-        //toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "item", ascending: true)
-        toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: false)
+        toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
 
     }
@@ -127,7 +173,7 @@ extension ToDoListViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
             }
         } else {
-            toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: false)
+            toDoList = toDoList?.filter("item CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
             tableView.reloadData()
         }
     }

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewControllerTableViewController: UITableViewController {
+class CategoryViewControllerTableViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
@@ -57,10 +57,9 @@ class CategoryViewControllerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let item = userCategories?[indexPath.row]
-        
-        cell.textLabel?.text = item?.name ?? "No cattegories added"
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+                
+        cell.textLabel?.text = userCategories?[indexPath.row].name ?? "No cattegories added"
         
         return cell
     }
@@ -80,6 +79,20 @@ class CategoryViewControllerTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    override func deleteModel(at indexPath: IndexPath) {
+        if let auxCategory = self.userCategories?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(auxCategory)
+                }
+            } catch {
+                print("issue with deleting")
+            }
+        } else {
+            print("Issue with categories")
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! ToDoListViewController
         
@@ -91,12 +104,5 @@ class CategoryViewControllerTableViewController: UITableViewController {
         }
     
     }
-    //MARK: ~ Data Manipulation Methods
-    
-    
-    //MARK: ~ Add New Categories
-    
-    
-    //MARK: ~ TableView Delegate Methods
     
 }
